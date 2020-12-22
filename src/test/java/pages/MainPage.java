@@ -1,44 +1,49 @@
 package pages;
 
-import org.openqa.selenium.By;
+import models.User;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindAll;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
-public class MainPage extends BasePage {
+import java.util.List;
 
-    static By mailTheme = By.xpath("//span[text()='Simbirsoft theme']");
-    static By createMailButton = By.xpath("//div[text()='Написать']");
-    static By receiverMailField = By.name("to");
-    static By subjectMailField = By.name("subjectbox");
-    static By bodyMailField = By.xpath("//div[@aria-label='Тело письма']");
-    static By sendMailButton = By.xpath("//div[text()='Отправить']");
 
-    public static int countMailsByTheme(WebDriver driver) {
+public class MainPage {
 
-        return checkCount(driver, mailTheme)/2;
+    private WebDriver driver;
+
+    @FindAll({@FindBy(xpath = "//span[text()='Simbirsoft theme']")})
+    private List<WebElement> mailTheme;
+
+    @FindBy(xpath = "//div[text()='Написать']")
+    private WebElement createMailButton;
+
+    @FindBy(name = "to")
+    private WebElement receiverMailField;
+
+    @FindBy(name = "subjectbox")
+    private WebElement subjectMailField;
+
+    @FindBy(xpath = "//div[@aria-label='Тело письма']")
+    private WebElement bodyMailField;
+
+    @FindBy(xpath = "//div[text()='Отправить']")
+    private WebElement sendMailButton;
+
+    public MainPage(WebDriver driver) {
+        PageFactory.initElements(driver, this);
+        this.driver = driver;
     }
 
-    public static void clickCreateMailButton(WebDriver driver) {
-
-        click(driver, createMailButton);
-    }
-
-    public static void editReceiverMailField(WebDriver driver, String value) {
-
-        edit(driver, receiverMailField, value);
-    }
-
-    public static void editSubjectMailField(WebDriver driver, String value) {
-
-        edit(driver, subjectMailField, value);
-    }
-
-    public static void editBodyMailField(WebDriver driver, String value) {
-
-        edit(driver, bodyMailField, value);
-    }
-
-    public static void clickSendMailButton(WebDriver driver) {
-
-        click(driver, sendMailButton);
+    public MainPage sendMail(User user) {
+        int count = mailTheme.size();
+        createMailButton.click();
+        receiverMailField.sendKeys(user.getLogin());
+        subjectMailField.sendKeys("Simbirsoft theme");
+        bodyMailField.sendKeys(String.format("Найдено %s писем\\ьма ", count));
+        sendMailButton.click();
+        return this;
     }
 }

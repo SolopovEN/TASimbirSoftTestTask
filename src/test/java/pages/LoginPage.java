@@ -1,38 +1,41 @@
 package pages;
 
-import org.openqa.selenium.By;
+import models.User;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
-public class LoginPage extends BasePage {
+public class LoginPage {
 
-    static String mainUrl = "https://mail.google.com";
-    static By loginField = By.id("identifierId");
-    static By loginNextButton = By.cssSelector("#identifierNext > div > button");
-    static By passwordField = By.name("password");
-    static By passwordNextButton = By.cssSelector("#passwordNext > div > button");
+    private WebDriver driver;
 
-    public static void open(WebDriver driver) {
+    @FindBy(id = "identifierId")
+    private WebElement login;
 
-        open(driver, mainUrl);
+    @FindBy(name = "password")
+    private  WebElement password;
+
+    @FindBy(css = "#identifierNext > div > button")
+    private WebElement loginNextButton;
+
+    @FindBy(css = "#passwordNext > div > button")
+    private WebElement passwordNextButton;
+
+    public LoginPage(WebDriver driver) {
+        PageFactory.initElements(driver, this);
+        this.driver = driver;
     }
 
-    public static void editLoginField(WebDriver driver, String value) {
-
-        edit(driver, loginField, value);
+    public void login(User user) {
+        login.sendKeys(user.getLogin());
+        loginNextButton.click();
+        password.sendKeys(user.getPassword());
+        passwordNextButton.click();
     }
 
-    public static void clickLoginNextButton(WebDriver driver) {
-
-        click(driver, loginNextButton);
-    }
-
-    public static void editPasswordField(WebDriver driver, String value) {
-
-        edit(driver, passwordField, value);
-    }
-
-    public static void clickPasswordNextButton(WebDriver driver) {
-
-        click(driver, passwordNextButton);
+    public MainPage loginSuccess(User user) {
+        login(user);
+        return new MainPage(driver);
     }
 }
