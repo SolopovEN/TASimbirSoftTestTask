@@ -39,6 +39,8 @@ public class TestBase {
         User user = new User("eugenetest80@gmail.com", "solopovPass");
         driver.get("https://mail.google.com");
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.loginSuccess(user).sendMail(user);
+        loginPage
+                .loginSuccess(user)
+                .sendMail(user);
     }
 }
